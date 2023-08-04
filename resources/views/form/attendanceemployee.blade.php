@@ -229,20 +229,7 @@ $data = AttendanceEmployee::find($a->id);
 
    
     @section('script')
-    <script>
-        function ChangeButton()
-        {
-            var button = document.getElementById('myButton');
-            if(button.innerText == 'Punch In'){
-            button.innerHTML = 'Punch Out';}
-            
-            else{
-            button.innerHTML = 'Punch In';
-            }
-
-        }
-
-    </script>
+    
 
     <script>
         // JavaScript code to display the current date and day
