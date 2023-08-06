@@ -7,15 +7,14 @@ use Brian2694\Toastr\Facades\Toastr;
 use App\Models\LeavesAdmin;
 use Illuminate\Support\Facades\DB;
 use DateTime;
-
 class LeavesController extends Controller
 {
-    // leaves
+    //
     public function leaves()
     {
-        $leaves = DB::table('leaves_admin')
-                    ->join('users', 'users.user_id', '=', 'leaves_admin.user_id')
-                    ->select('leaves_admin.*', 'users.position','users.name','users.avatar')
+        $leaves = DB::table('leaves_admins')
+                    ->join('users', 'users.user_id', '=', 'leaves_admins.user_id')
+                    ->select('leaves_admins.*', 'users.position','users.name','users.avatar')
                     ->get();
 
         return view('form.leaves',compact('leaves'));
@@ -28,24 +27,23 @@ class LeavesController extends Controller
             'from_date'    => 'required|string|max:255',
             'to_date'      => 'required|string|max:255',
             'leave_reason' => 'required|string|max:255',
-            'status'       => 'required|string|',
         ]);
 
         DB::beginTransaction();
         try {
+
             $from_date = new DateTime($request->from_date);
             $to_date = new DateTime($request->to_date);
             $day     = $from_date->diff($to_date);
             $days    = $day->d;
 
-            $leaves = new LeavesAdmin();
-            $leaves->user_id       = $request->user_id;
+            $leaves = new LeavesAdmin;
+            $leaves->user_id        = $request->user_id;
             $leaves->leave_type    = $request->leave_type;
             $leaves->from_date     = $request->from_date;
             $leaves->to_date       = $request->to_date;
             $leaves->day           = $days;
             $leaves->leave_reason  = $request->leave_reason;
-            $leaves->status        = $request->status;
             $leaves->save();
             
             DB::commit();

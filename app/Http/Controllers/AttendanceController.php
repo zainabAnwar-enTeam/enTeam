@@ -21,6 +21,12 @@ class AttendanceController extends Controller
     //
     public function index()
     {
+        if (Auth::user()->role_name=='Admin')
+        {
+            $result = DB::table('attendance_employees')->get();
+            return view('form/attendanceemployee',compact('result'));
+        }
+        
         return view('form/attendance');
 
     }

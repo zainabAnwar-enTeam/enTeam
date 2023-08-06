@@ -185,11 +185,11 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-6"> 
-                                    <label>Position</label>
-                                    <select class="select" name="position" id="position">
+                                    <label>Department</label>
+                                    <select class="select" name="department" id="department">
                                         <option selected disabled> --Select --</option>
-                                        @foreach ($position as $positions )
-                                        <option value="{{ $positions->position }}">{{ $positions->position }}</option>
+                                        @foreach ($department as $departments )
+                                        <option value="{{ $departments->department }}">{{ $departments->department }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -203,14 +203,15 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-6"> 
-                                    <label>Department</label>
-                                    <select class="select" name="department" id="department">
+                                    <label>Position</label>
+                                    <select class="select" name="position" id="position">
                                         <option selected disabled> --Select --</option>
-                                        @foreach ($department as $departments )
-                                        <option value="{{ $departments->department }}">{{ $departments->department }}</option>
+                                        @foreach ($position as $positions )
+                                        <option value="{{ $positions->position }}">{{ $positions->position }}</option>
                                         @endforeach
                                     </select>
                                 </div>
+                                
                             </div>
                             <div class="row"> 
                                 <div class="col-sm-6"> 

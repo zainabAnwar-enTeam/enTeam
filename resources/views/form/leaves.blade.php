@@ -126,9 +126,10 @@
                                     @foreach ($leaves as $items )  
                                         <tr>
                                             <td>
-                                                <a href="#" style="text-decoration: none; color:black;">{{ $items->name }}<span>{{ $items->position }}</span></a>
+                                               
+                                                    <a href="#" style="text-decoration: none; color:black;">{{ $items->name }}<span>{{ $items->position }}</span></a>
+                                                
                                             </td>
-                                            
                                             <td hidden class="id">{{ $items->id }}</td>
                                             <td class="leave_type">{{$items->leave_type}}</td>
                                             <td hidden class="from_date">{{ $items->from_date }}</td>
@@ -137,20 +138,18 @@
                                             <td>{{date('d F, Y',strtotime($items->to_date)) }}</td>
                                             <td class="day">{{$items->day}} Day</td>
                                             <td class="leave_reason">{{$items->leave_reason}}</td>
-                                            <td class="status">{{$items->status}}</td>
                                             <td class="text-center">
-                                            @if (Auth::user()->role_name=='Admin')
                                                 <div class="dropdown action-label">
                                                     <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
                                                         <i class="fa fa-dot-circle-o text-purple"></i> New
                                                     </a>
                                                     <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" onclick="change()"><i class="fa fa-dot-circle-o text-purple"></i> New</a>
                                                         <a class="dropdown-item" href="#"><i class="fa fa-dot-circle-o text-info"></i> Pending</a>
                                                         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#approve_leave"><i class="fa fa-dot-circle-o text-success"></i> Approved</a>
                                                         <a class="dropdown-item" href="#"><i class="fa fa-dot-circle-o text-danger"></i> Declined</a>
                                                     </div>
                                                 </div>
-                                            @endif
                                             </td>
                                             <td class="text-right">
                                                 <div class="dropdown dropdown-action">
@@ -211,12 +210,8 @@
                                 <label>Leave Reason <span class="text-danger">*</span></label>
                                 <textarea rows="4" class="form-control" id="leave_reason" name="leave_reason"></textarea>
                             </div>
-                            <div class="form-group">
-                                <label>Status<span class="text-danger">*</span></label>
-                                <input type="text" id="status" name="status">
-                            </div>
                             <div class="submit-section">
-                                <button type="submit" class="btn btn-primary submit-btn" >Submit</button>
+                                <button type="submit" class="btn btn-primary submit-btn">Submit</button>
                             </div>
                         </form>
                     </div>
@@ -360,6 +355,13 @@
             var _this = $(this).parents('tr');
             $('.e_id').val(_this.find('.id').text());
         });
+    </script>
+
+<script>
+     function change()
+     {
+            inner.text = Approved;
+      }
     </script>
     @endsection
 @endsection

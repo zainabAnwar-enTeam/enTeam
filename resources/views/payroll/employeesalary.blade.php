@@ -172,13 +172,9 @@
                                 </div>
                                 <input class="form-control" type="hidden" name="user_id" id="employee_id" readonly>
                                 <div class="col-sm-6">
-                                    <label>Net Salary</label>
-                                    <input class="form-control @error('salary') is-invalid @enderror" type="number" name="salary" id="salary" value="{{ old('salary') }}" placeholder="Enter net salary">
-                                    @error('salary')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
+                                    <label>Email</label>
+                                    <input type="text" class="form-control" id="email" name="email" placeholder="Auto Email" readonly>
+                                    
                                 </div>
                             </div>
                             <div class="row"> 
@@ -203,6 +199,15 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
+                                        <label>Conveyance  Allowance</label>
+                                        <input class="form-control @error('medical_allowance') is-invalid @enderror" type="number" name="medical_allowance" id="medical_allowance" value="{{ old('Conveyance_allowance') }}" placeholder="Enter Conveyance Allowance">
+                                        @error('medical_allowance')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
                                         <label>House Rent Allowance</label>
                                         <input class="form-control @error('hra') is-invalid @enderror" type="number"  name="hra" id="hra" value="{{ old('hra') }}" placeholder="Enter House Rent Allowance">
                                         @error('hra')
@@ -212,9 +217,18 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label>Medical  Allowance</label>
+                                        <label>Medical Allowance</label>
                                         <input class="form-control @error('medical_allowance') is-invalid @enderror" type="number" name="medical_allowance" id="medical_allowance" value="{{ old('medical_allowance') }}" placeholder="Enter Medical Allowance">
                                         @error('medical_allowance')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label>PHD Allowance</label>
+                                        <input class="form-control @error('medical_allowance') is-invalid @enderror" type="number" name="PHD_allowance" id="PHD_allowance" value="{{ old('PHD_allowance') }}" placeholder="Enter PHD Allowance" required>
+                                        @error('PHD_allowance')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -252,8 +266,26 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Loan</label>
-                                        <input class="form-control @error('leave') is-invalid @enderror" type="text" name="leave" id="leave" value="{{ old('leave') }}" placeholder="Enter Loan">
-                                        @error('leave')
+                                        <input class="form-control @error('leave') is-invalid @enderror" type="text" name="loan" id="loan" value="{{ old('loan') }}" placeholder="Enter Loan">
+                                        @error('Loan')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Group Insurance</label>
+                                        <input class="form-control @error('leave') is-invalid @enderror" type="text" name="loan" id="loan" value="{{ old('loan') }}" placeholder="Enter Group Insurance">
+                                        @error('Loan')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Income Tax</label>
+                                        <input class="form-control @error('leave') is-invalid @enderror" type="text" name="loan" id="loan" value="{{ old('loan') }}" placeholder="Enter Income Tax">
+                                        @error('Loan')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -413,6 +445,7 @@
             $('#name').on('change',function()
             {
                 $('#employee_id').val($(this).find(':selected').data('employee_id'));
+                $('#email').val($(this).find(':selected').data('email'));
             });
         </script>
         {{-- update js --}}
@@ -445,5 +478,8 @@
             $('.e_id').val(_this.find('.id').text());
         });
     </script>
+
+
+
     @endsection
 @endsection

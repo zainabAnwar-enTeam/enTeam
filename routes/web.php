@@ -251,7 +251,7 @@ Route::controller(LeavesController::class)->group(function () {
 //------------------------------- Attendance Punch_in and Punch-out--------------//
 Route::controller(AttendanceController::class)->group(function(){
     Route::post('attendance/punch-in','punchIn')->middleware('auth')->name('attendance123');
-    Route::post('attendance/punch-out','punchOut')->middleware('auth')->name('attendance1234');  
+    Route::post('attendance/punch-out','punchOut')->middleware('auth')->name('attendance1234'); 
 });
 
 //------------------------------- All Attendance/////////--------------//
