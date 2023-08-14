@@ -22,3 +22,4 @@ class AttendanceRecordController extends Controller
 
 
 }
+ 

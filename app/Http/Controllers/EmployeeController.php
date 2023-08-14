@@ -9,8 +9,10 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\Employee;
 use App\Models\department;
+use App\Models\designation;
 use App\Models\User;
 use App\Models\module_permission;
+use Auth;
 
 class EmployeeController extends Controller
 {
@@ -361,6 +363,25 @@ class EmployeeController extends Controller
         return view('form.departments',compact('departments'));
     }
 
+    public function indexx()
+    {
+        if (Auth::user()->role_name=='Admin')
+        {
+            $result      = DB::table('users')->where('role_name','Employee')->get();
+            $role_name   = DB::table('role_type_users')->get();
+            $position    = DB::table('position_types')->get();
+            $department  = DB::table('departments')->get();
+            $status_user = DB::table('user_types')->get();
+            return view('usermanagement.user_control',compact('result','role_name','position','department','status_user'));
+        }
+        else
+        {
+            return redirect()->route('home');
+        }
+        
+    }
+    
+
     /** save record department */
     public function saveRecordDepartment(Request $request)
     {
@@ -433,10 +454,8 @@ class EmployeeController extends Controller
     }
 
     /** page designations */
-    public function designationsIndex()
-    {
-        return view('form.designations');
-    }
+   
+    
 
     /** page time sheet */
     public function timeSheetIndex()
@@ -450,4 +469,5 @@ class EmployeeController extends Controller
         return view('form.overtime');
     }
 
+    
 }

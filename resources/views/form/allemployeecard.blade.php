@@ -11,8 +11,8 @@
                     <div class="col">
                         <h3 class="page-title">Employee</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Employee</li>
+                            <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
+                            <li class="breadcrumb-item active"><a href="{{ route('all/employee/card') }}">Employee</a></li>
                         </ul>
                     </div>
                     <div class="col-auto float-right ml-auto">
@@ -56,25 +56,91 @@
             <!-- Search Filter -->
             {{-- message --}}
             {!! Toastr::message() !!}
-            <div class="row staff-grid-row">
-                @foreach ($users as $lists )
-                <div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
-                    <div class="profile-widget">
-                        <div class="profile-img">
-                            <a href="{{ url('employee/profile/'.$lists->user_id) }}" class="avatar"><img src="{{ URL::to('/assets/images/'. $lists->avatar) }}" alt="{{ $lists->avatar }}" alt="{{ $lists->avatar }}"></a>
-                        </div>
-                        <div class="dropdown profile-action">
-                            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="{{ url('all/employee/view/edit/'.$lists->user_id) }}"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                <a class="dropdown-item" href="{{url('all/employee/delete/'.$lists->user_id)}}"onclick="return confirm('Are you sure to want to delete it?')"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
-                            </div>
-                        </div>
-                        <h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="profile.html">{{ $lists->name }}</a></h4>
-                        <div class="small text-muted">{{ $lists->position }}</div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped custom-table datatable">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>User ID</th>
+                                    <th hidden></th>
+                                    <th>Email</th>
+                                    <th>Position</th>
+                                    <th>Phone</th>
+                                    <th>Join Date</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Departement</th>
+                                    <th class="text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($result as $key=>$user )
+                                <tr>
+                                    <td hidden class="ids">{{ $user->id }}</td>
+                                    <td class="id">{{ $user->user_id }}</td>
+                                    <td class="email">{{ $user->email }}</td>
+                                    <td class="position">{{ $user->position }}</td>
+                                    <td class="phone_number">{{ $user->phone_number }}</td>
+                                    <td>{{ $user->join_date }}</td>
+                                    <td>
+                                        <span class="badge bg-inverse-dark role_name">{{ $user->role_name }}</span>
+                                       
+                                    </td>
+                                    <td>
+                                        <div class="dropdown action-label">
+                                            @if ($user->status=='Active')
+                                                <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa fa-dot-circle-o text-success"></i>
+                                                    <span class="statuss">{{ $user->status }}</span>
+                                                </a>
+                                                @elseif ($user->status=='Inactive')
+                                                <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa fa-dot-circle-o text-info"></i>
+                                                    <span class="statuss">{{ $user->status }}</span>
+                                                </a>
+                                                @elseif ($user->status=='Disable')
+                                                <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa fa-dot-circle-o text-danger"></i>
+                                                    <span class="statuss">{{ $user->status }}</span>
+                                                </a>
+                                                @elseif ($user->status=='')
+                                                <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa fa-dot-circle-o text-dark"></i>
+                                                    <span class="statuss">N/A</span>
+                                                </a>
+                                            @endif
+                                            
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <a class="dropdown-item" href="#">
+                                                    <i class="fa fa-dot-circle-o text-success"></i> Active
+                                                </a>
+                                                <a class="dropdown-item" href="#">
+                                                    <i class="fa fa-dot-circle-o text-warning"></i> Inactive
+                                                </a>
+                                                <a class="dropdown-item" href="#">
+                                                    <i class="fa fa-dot-circle-o text-danger"></i> Disable
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="department">{{ $user->department }}</td>
+                                    <td class="text-right">
+                                        <div class="dropdown dropdown-action">
+                                            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <a class="dropdown-item userUpdate" data-toggle="modal" data-id="'.$user->id.'" data-target="#edit_user"><i class="fa fa-pencil m-r-5"></i> Edit</a>
+                                                <a class="dropdown-item userDelete" href="#" data-toggle="modal" ata-id="'.$user->id.'" data-target="#delete_user"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                @endforeach
             </div>
         </div>
         <!-- /Page Content -->

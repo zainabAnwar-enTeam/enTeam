@@ -61,69 +61,53 @@
                                 <th>No of Days</th>
                                 <th>Reason</th>
                                 <th class="text-center">Status</th>
-                                <th>Approved by</th>
                                 <th class="text-right">Actions</th>
                             </tr>
                         </thead>
+
                         <tbody>
+                            @if(!empty($leaves))
+                            @foreach ($leaves as $items )
                             <tr>
-                                <td>Casual Leave</td>
-                                <td>8 Mar 2019</td>
-                                <td>9 Mar 2019</td>
-                                <td>2 days</td>
-                                <td>Going to Hospital</td>
+                                <td hidden class="id">{{ $items->id }}</td>
+                                <td class="leave_type">{{$items->leave_type}}</td>
+                                <td hidden class="from_date">{{ $items->from_date }}</td>
+                                <td>{{date('d F, Y',strtotime($items->from_date)) }}</td>
+                                <td hidden class="to_date">{{$items->to_date}}</td>
+                                <td>{{date('d F, Y',strtotime($items->to_date)) }}</td>
+                                <td class="day">{{$items->day}} Day</td>
+                                <td class="leave_reason">{{$items->leave_reason}}</td>
                                 <td class="text-center">
-                                    <div class="action-label">
-                                        <a class="btn btn-white btn-sm btn-rounded" href="javascript:void(0);">
-                                            <i class="fa fa-dot-circle-o text-purple"></i> New
+                                    <div class="dropdown action-label">
+                                        <?php
+                                        if ($items->leave_status == 'Declined') {
+                                            $design = "fa fa-dot-circle-o text-danger";
+                                        }
+                                        else if ($items->leave_status == 'Approved') {
+                                            $design = "fa fa-dot-circle-o text-success";
+                                        }
+                                        else
+                                        {
+                                            $design = "fa fa-dot-circle-o text-purple";
+                                        }
+                                        ?>
+                                        <a class="btn btn-white btn-sm btn-rounded" href="#" data-toggle="dropdown" aria-expanded="false">
+                                            <i class="{{$design}}"></i> {{$items->leave_status}}
                                         </a>
                                     </div>
-                                </td>
-                                <td>
-                                    <h2 class="table-avatar">
-                                        <a href="profile.html" class="avatar avatar-xs"><img src="{{URL::to('assets/img/profiles/avatar-09.jpg')}}" alt=""></a>
-                                        <a href="#">Richard Miles</a>
-                                    </h2>
                                 </td>
                                 <td class="text-right">
                                     <div class="dropdown dropdown-action">
                                         <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#edit_leave"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                            <a class="dropdown-item leaveUpdate" data-toggle="modal" data-id="'.$items->id.'" data-target="#edit_leave"><i class="fa fa-pencil m-r-5"></i> Edit</a>
+                                            <a class="dropdown-item leaveDelete" href="#" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
                                         </div>
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>Casual Leave</td>
-                                <td>10 Jan 2019</td>
-                                <td>10 Jan 2019</td>
-                                <td>First Half</td>
-                                <td>Going to Hospital</td>
-                                <td class="text-center">
-                                    <div class="action-label">
-                                        <a class="btn btn-white btn-sm btn-rounded" href="javascript:void(0);">
-                                            <i class="fa fa-dot-circle-o text-danger"></i> Declined
-                                        </a>
-                                    </div>
-                                </td>
-                                <td>
-                                    <h2 class="table-avatar">
-                                        <a href="profile.html" class="avatar avatar-xs"><img src="{{URL::to('assets/img/profiles/avatar-09.jpg')}}" alt=""></a>
-                                        <a href="#">Richard Miles</a>
-                                    </h2>
-                                </td>
-                                <td class="text-right">
-                                    <div class="dropdown dropdown-action">
-                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#edit_leave"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
+                            @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -144,43 +128,38 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                <form action="{{ route('form/leaves/save') }}" method="POST">
-                            @csrf
-                            <div class="form-group">
-                                <label>Leave Type <span class="text-danger">*</span></label>
-                                <select class="select" id="leaveType" name="leave_type">
-                                    <option selected disabled>Select Leave Type</option>
-                                    <option value="Casual Leave 12 Days">Casual Leave 12 Days</option>
-                                    <option value="Medical Leave">Medical Leave</option>
-                                    <option value="Loss of Pay">Loss of Pay</option>
-                                </select>
+                    <form action="{{ route('form/leaves/save') }}" method="POST">
+                        @csrf
+                        <div class="form-group">
+                            <label>Leave Type <span class="text-danger">*</span></label>
+                            <select class="select" id="leaveType" name="leave_type">
+                                <option selected disabled>Select Leave Type</option>
+                                <option value="Casual Leave 12 Days">Casual Leave 12 Days</option>
+                                <option value="Medical Leave">Medical Leave</option>
+                                <option value="Loss of Pay">Loss of Pay</option>
+                            </select>
+                        </div>
+                        <input type="hidden" class="form-control" id="user_id" name="user_id" value="{{ Auth::user()->user_id }}">
+                        <div class="form-group">
+                            <label>From <span class="text-danger">*</span></label>
+                            <div class="cal-icon">
+                                <input type="text" class="form-control datetimepicker" id="from_date" name="from_date">
                             </div>
-                            <input type="hidden" class="form-control" id="user_id" name="user_id" value="{{ Auth::user()->user_id }}">
-                            <div class="form-group">
-                                <label>From <span class="text-danger">*</span></label>
-                                <div class="cal-icon">
-                                    <input type="text" class="form-control datetimepicker" id="from_date" name="from_date">
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label>To <span class="text-danger">*</span></label>
+                            <div class="cal-icon">
+                                <input type="text" class="form-control datetimepicker" id="to_date" name="to_date">
                             </div>
-                            <div class="form-group">
-                                <label>To <span class="text-danger">*</span></label>
-                                <div class="cal-icon">
-                                    <input type="text" class="form-control datetimepicker" id="to_date" name="to_date">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Leave Reason <span class="text-danger">*</span></label>
-                                <textarea rows="4" class="form-control" id="leave_reason" name="leave_reason"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>Status<span class="text-danger">*</span> </label>
-                                <textarea class="form-control" id="restrictedInput" disable>New</textarea>
-                                <script>document.getElementById("restrictedInput").disabled = true;</script> 
-                            </div>
-                            <div class="submit-section">
-                                <button type="submit" class="btn btn-primary submit-btn">Submit</button>
-                            </div>
-                        </form>
+                        </div>
+                        <div class="form-group">
+                            <label>Leave Reason <span class="text-danger">*</span></label>
+                            <textarea rows="4" class="form-control" id="leave_reason" name="leave_reason"></textarea>
+                        </div>
+                        <div class="submit-section">
+                            <button type="submit" class="btn btn-primary submit-btn">Submit</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

@@ -90,6 +90,7 @@
                             <div class="card-body">
                                 <h3 class="card-title text-center">Latest Jobs</h3>
                                 <ul class="list-group">
+                                    <?php  ?>
                                     @foreach ($job_list as $key => $items)
                                     @php
                                         $date = $items->created_at;

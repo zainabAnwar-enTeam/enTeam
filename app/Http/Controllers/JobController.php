@@ -18,7 +18,8 @@ class JobController extends Controller
     public function jobList()
     {    
         $job_list = DB::table('add_jobs')->get();
-        return view('job.joblist',compact('job_list'));
+        $job_count = DB::table('add_jobs')->get()->count();
+        return view('job.joblist',compact('job_list','job_count'));
     }
     
     // job view

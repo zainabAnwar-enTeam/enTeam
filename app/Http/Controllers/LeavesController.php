@@ -7,6 +7,7 @@ use Brian2694\Toastr\Facades\Toastr;
 use App\Models\LeavesAdmin;
 use Illuminate\Support\Facades\DB;
 use DateTime;
+use Auth;
 class LeavesController extends Controller
 {
     //
@@ -17,8 +18,33 @@ class LeavesController extends Controller
                     ->select('leaves_admins.*', 'users.position','users.name','users.avatar')
                     ->get();
 
-        return view('form.leaves',compact('leaves'));
+        $totalLeaves = DB::table('leaves_admins')->count();
+        $pendingLeaves = DB::table('leaves_admins')->where('leave_status','pending')->count();
+        $approvedLeaves = DB::table('leaves_admins')->where('leave_status','Approved')->count();
+        $declinedLeaves = DB::table('leaves_admins')->where('leave_status','Declined')->count();
+
+        return view('form.leaves',compact('leaves','totalLeaves','pendingLeaves','approvedLeaves','declinedLeaves'));
     }
+
+
+      //update Status From Admin of Leave
+      public function editstatus(Request $request)
+      {
+          DB::beginTransaction();
+          try {
+             
+              LeavesAdmin::where('id', $request->id)->update(['leave_status' => $request->status]);
+              DB::commit();
+              Toastr::success('Status Updated successfully :)','Success');
+              return redirect()->back();
+          }
+          catch(\Exception $e) {
+              DB::rollback();
+              Toastr::error('Update Status fail :)','Error');
+              return redirect()->back();
+          }
+         
+      }
     // save record
     public function saveRecord(Request $request)
     {
@@ -125,7 +151,17 @@ class LeavesController extends Controller
     // leaves Employee
     public function leavesEmployee()
     {
-        return view('form.leavesemployee');
+        $loggedInUserId = Auth::id();        
+        $leaves = DB::table('leaves_admins')
+        ->join('users', 'users.user_id', '=', 'leaves_admins.user_id')
+        ->where('users.role_name', 'employee') // Filter for "employee" user_role
+        ->where('users.id', $loggedInUserId) // Filter for the logged-in user
+        ->select('leaves_admins.*', 'users.position', 'users.name', 'users.avatar')
+        ->get();
+        
+      //  $medical = $leaves::where('leave_type','Medical Leave')->count();
+
+        return view('form.leavesemployee',compact('leaves'));
     }
 
     // shiftscheduling

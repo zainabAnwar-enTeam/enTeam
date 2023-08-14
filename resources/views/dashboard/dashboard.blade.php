@@ -86,7 +86,7 @@
                                 </div>
                                 <h3 class="mb-3">10</h3>
                                 <div class="progress mb-2" style="height: 5px;">
-                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 70%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 70%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                                 <p class="mb-0">Overall Employees 218</p>
                             </div>

@@ -13,9 +13,6 @@ use Session;
 use Auth;
 use Brian2694\Toastr\Facades\Toastr;
 
-
-
-
 class AttendanceController extends Controller
 {
     //
@@ -34,17 +31,16 @@ class AttendanceController extends Controller
     {
         $date = new DateTime();
         $date->format("d-m-y");
-     }
+    }
     
-    
-
     public function punchIn()
     {
         $user = Auth::user();
     
         // Check if the user already punched in for the day
         if ($user->attendances()->whereDate('punch_in', Carbon::today())->exists()) {
-            return redirect()->route('attendance/employee/page')->with('error', 'You have already punched in for today.');
+            Toastr::error('You have already Punched in Today');
+            return redirect()->route('attendance/employee/page');
         }
         else{
             $attendance_employees = new AttendanceEmployee();
@@ -60,6 +56,7 @@ class AttendanceController extends Controller
         
     }
     
+     
     public function punchOut()
     {
         $user = Auth::user();
@@ -82,6 +79,9 @@ class AttendanceController extends Controller
     
         return redirect()->back();
     }
+
+    
+
 
     
 }

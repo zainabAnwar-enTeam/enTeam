@@ -3,7 +3,6 @@
 use App\Models\AttendanceEmployee;
 
 $a = Auth::user();
-$data = AttendanceEmployee::find($a->id);
 ?>
 @extends('layouts.master')
 @section('content')
@@ -48,7 +47,7 @@ $data = AttendanceEmployee::find($a->id);
                             </form>
                             </div>
                             <div class="punch-btn-section">
-                            <form action="{{ route('attendance1234') }}" method="POST">
+                                <form action="{{ route('attendance1234') }}" method="POST">
                               @csrf
                                  <button type="submit" class="btn btn-primary punch-btn">Punch Out</button>
                                 </form>

@@ -10,6 +10,7 @@ use App\Http\Controllers\PhotosController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\EmployeeController;
@@ -25,7 +26,7 @@ use App\Http\Controllers\TrainersController;
 use App\Http\Controllers\TrainingTypeController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\PersonalInformationController;
-
+use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -182,10 +183,24 @@ Route::controller(JobController::class)->group(function () {
     Route::get('page/aptitude/result', 'aptituderesultIndex')->middleware('auth')->name('page/aptitude/result');
 
 });
+
+Route::controller(DesignationController::class)->group(function(){
+    Route::get('form/designations/page', 'index')->middleware('auth')->name('form/designations/page'); 
+    Route::post('form/designations/save', 'saveRecordDesignations')->middleware('auth')->name('form/designations/save');  
+    Route::post('form/designations/page', 'updateRecordDesignation')->middleware('auth')->name('form/designations/page');  
+    Route::post('form/designations/delete', 'deleteRecordDesignations')->middleware('auth')->name('form/designations/delete'); 
+ });
+
+
+ //-------------------------- form Task ----------------//
+Route::controller(TaskController::class)->group(function(){
+    Route::post('task','saveRecord')->middleware('auth')->name('task');
+ });
  
 // ----------------------------- form employee ------------------------------//
 Route::controller(EmployeeController::class)->group(function () {
     Route::get('all/employee/card', 'cardAllEmployee')->middleware('auth')->name('all/employee/card');
+    Route::get('all/employee/card','indexx')->middleware('auth')->name('all/employee/card');
     Route::get('all/employee/list', 'listAllEmployee')->middleware('auth')->name('all/employee/list');
     Route::post('all/employee/save', 'saveRecord')->middleware('auth')->name('all/employee/save');
     Route::get('all/employee/view/edit/{employee_id}', 'viewRecord');
@@ -199,10 +214,6 @@ Route::controller(EmployeeController::class)->group(function () {
     Route::post('form/department/update', 'updateRecordDepartment')->middleware('auth')->name('form/department/update');    
     Route::post('form/department/delete', 'deleteRecordDepartment')->middleware('auth')->name('form/department/delete');  
     
-    Route::get('form/designations/page', 'designationsIndex')->middleware('auth')->name('form/designations/page');    
-    Route::post('form/designations/save', 'saveRecordDesignations')->middleware('auth')->name('form/designations/save');    
-    Route::post('form/designations/update', 'updateRecordDesignations')->middleware('auth')->name('form/designations/update');    
-    Route::post('form/designations/delete', 'deleteRecordDesignations')->middleware('auth')->name('form/designations/delete');
     
     Route::get('form/timesheet/page', 'timeSheetIndex')->middleware('auth')->name('form/timesheet/page');    
     Route::post('form/timesheet/save', 'saveRecordTimeSheets')->middleware('auth')->name('form/timesheet/save');    
@@ -235,6 +246,8 @@ Route::controller(LeavesController::class)->group(function () {
     Route::post('form/leaves/save', 'saveRecord')->middleware('auth')->name('form/leaves/save');
     Route::post('form/leaves/edit', 'editRecordLeave')->middleware('auth')->name('form/leaves/edit');
     Route::post('form/leaves/edit/delete','deleteLeave')->middleware('auth')->name('form/leaves/edit/delete');    
+    Route::post('form/leaves/edit/editstatus','editstatus')->middleware('auth')->name('form/leaves/edit/editstatus'); 
+   // Route::get('fo')
 });
 
 // ----------------------------- form attendance  ------------------------------//
@@ -250,6 +263,7 @@ Route::controller(LeavesController::class)->group(function () {
 
 //------------------------------- Attendance Punch_in and Punch-out--------------//
 Route::controller(AttendanceController::class)->group(function(){
+    Route::post('attendance/employee/page','index')->middleware('auth')->name('attendance/employee/page');
     Route::post('attendance/punch-in','punchIn')->middleware('auth')->name('attendance123');
     Route::post('attendance/punch-out','punchOut')->middleware('auth')->name('attendance1234'); 
 });
@@ -345,4 +359,9 @@ Route::controller(PersonalInformationController::class)->group(function () {
     Route::post('user/information/save', 'saveRecord')->middleware('auth')->name('user/information/save');
 });
 
+
+//------------------------------TASK----------------//
+Route::controller(TaskController::class)->group(function(){
+    Route::get('task','index')->middleware('auth')->name('task');
+ });
 
