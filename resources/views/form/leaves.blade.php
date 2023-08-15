@@ -23,7 +23,7 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="stats-info">
-                    <h6>Today Leaves</h6>
+                    <h6>Total Leaves</h6>
                     <h4>{{ $totalLeaves }}</h4>
                 </div>
             </div>
@@ -126,7 +126,7 @@
                             <tr>
                                 <td>
 
-                                    <a href="#" style="text-decoration: none; color:black;">{{ $items->name }}<span>{{ $items->position }}</span></a>
+                                    <a href="#" style="text-decoration: none; color:black;">{{ $items->name }}</a>
 
                                 </td>
                                 <td hidden class="id">{{ $items->id }}</td>

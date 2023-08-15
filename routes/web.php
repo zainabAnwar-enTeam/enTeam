@@ -363,5 +363,6 @@ Route::controller(PersonalInformationController::class)->group(function () {
 //------------------------------TASK----------------//
 Route::controller(TaskController::class)->group(function(){
     Route::get('task','index')->middleware('auth')->name('task');
+    Route::post('task/save','saveRecord')->middleware('auth')->name('task/save');
  });
 

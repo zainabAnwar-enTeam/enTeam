@@ -26,6 +26,8 @@ class DesignationController extends Controller
             'designation => required|string|max:255',
             'department => required|string|max:255',
         ]);
+        
+        dd($request->all());
         DB::beginTransaction();
         try{
             $designation = designation::where('designations',$request->designations)->first();

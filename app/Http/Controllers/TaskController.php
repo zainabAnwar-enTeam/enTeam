@@ -17,14 +17,15 @@ class TaskController extends Controller
         {
         $employee = DB::table('users')->get();
         $departments = DB::table('departments')->get();
-        return view('task/task',compact('employee','departments'));
+        $task = DB::table('tasks')->get();
+        return view('task/task',compact('employee','departments','task'));
         }
         return view('task/task');
     }
 
     public function saveRecord(Request $request )
     {
-        $request->validate([
+       /* $request->validate([
             'task_name'         => 'required|string|max:255',
             'employee_name'     => 'required|string|max:255',
             'department'        => 'required|string|max:255',
@@ -32,10 +33,11 @@ class TaskController extends Controller
             'starting_date'     => 'required|string|max:255',
             'ending_date'       => 'required|string|max:255',
             'task_description'  => 'required|string|max:255',
-        ]);
-
+        ]);*/
+       
+       //dd($request->all());
         DB::beginTransaction();
-        try{
+        //try{
             $task = new Task;   // Create a new Task instance and assign properties
             $task->task_name        = $request->task_name;
             $task->task_description = $request->task_description;
@@ -43,18 +45,17 @@ class TaskController extends Controller
             $task->department       = $request->department;
             $task->starting_date    = $request->starting_date;
             $task->ending_date      = $request->ending_date;
+            $task->status ='Pending';
             $task->worth_of_task    = $request->worth_of_task;
             $task->save();
             DB::commit();   // Commit the transaction if everything is successful
-           
-            return redirect()->back()->with('success','New task Created');  // Redirect back with a success message
-         }
-
-         catch(\Exception $e)
-         {
-            DB::rollback();      // If an exception occurs, rollback the transaction
-           
-            return redirect()->back()->with('error',' Adding New task failed');  // Redirect back with an error message
-          }
+            return redirect()->back();
+     //   }
+       // catch(\Exception $e) {
+            
+        //    return redirect()->back()->with('success','New task Created');  // Redirect back with a success message
+       // }
+         
+        
     }
 }

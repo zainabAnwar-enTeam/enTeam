@@ -65,7 +65,44 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                
+                                @foreach($task as $detail)
+                                <tr>
+                                    <td class="task_name">{{$detail->task_name}}</td>
+                                    <td class="employee_name">{{$detail->employee_name }}</td>
+                                    <td class="task_description">{{$detail->task_description}}</td>
+                                    <td class="starting_date">{{$detail->starting_date}}</td>
+                                    <td class="ending_date">{{$detail->ending_date}}</td>
+                                    <td class="text-center">
+                                    <div class="dropdown action-label">
+                                        <?php
+                                        if ($detail->status == 'Incompleted') {
+                                            $design = "fa fa-dot-circle-o text-danger";
+                                        } else if ($detail->status == 'Completed') {
+                                            $design = "fa fa-dot-circle-o text-success";
+                                        } else {
+                                            $design = "fa fa-dot-circle-o text-purple";
+                                        }
+                                        ?>
+                                        <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
+                                            <i class="{{$design}}"></i> {{$detail->status}}
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item changeStatusApprove" href="#" data-toggle="modal" data-target="#approve_leave"><i class="fa fa-dot-circle-o text-success"></i> Completed</a>
+                                            <a class="dropdown-item changeStatusDecline" href="#" data-toggle="modal" data-target="#approve_leave"><i class="fa fa-dot-circle-o text-danger"></i> Incompleted</a>
+                                        </div>
+                                    </div>
+                                </td>
+                                    <td class="text-right">
+                                    <div class="dropdown dropdown-action">
+                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item leaveUpdate" data-toggle="modal" data-id="'.$items->id.'" data-target="#edit_leave"><i class="fa fa-pencil m-r-5"></i> Edit</a>
+                                            <a class="dropdown-item leaveDelete" href="#" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                        </div>
+                                    </div>
+                                    </td>
+                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -86,23 +123,23 @@
                 </div>
                 
                 <div class="modal-body">
-                    <form action="{{ route('task') }}" method="POST">
+                    <form action="{{ route('task/save') }}" method="POST">
                         @csrf
                         <div class="row"> 
                             <div class="col-sm-6"> 
                                 <div class="form-group">
                                     <label>Task Name</label>
-                                    <input class="form-control @error('name') is-invalid @enderror" type="text" id="task_name" name="task_name" value="{{ old('name') }}" placeholder="Enter Task Name">
+                                    <input class="form-control" type="text" id="task_name" name="task_name" value="{{ old('task_name') }}" placeholder="Enter Task Name">
                                 </div>
                             </div>
                             <div class="col-sm-6"> 
                                 <label class="col-form-label">Employee Name</label>
                                     
-                                <select class="select select2s-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" id="employee_name" name="name">
+                                <select class="select select2s-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true" id="employee_name" name="employee_name">
                                 <option value="">-- Select --</option>
                                 @foreach ($employee as $key=>$user )
                                     <option value="{{ $user->name }}" data-department={{ $user->department }}>{{ $user->name }}</option>
-                                    @endforeach
+                                @endforeach
                                 </select>
                             </div>
                         </div>
@@ -110,7 +147,7 @@
                         <div class="row"> 
                             <div class="col-sm-6"> 
                                 <label class="col-form-label">Department</label>
-                                <input class="form-control" type="email" id="department" name="email" placeholder="Auto email" readonly>
+                                <input class="form-control" type="department" id="department" name="department" placeholder="Auto Department" readonly>
                             </div>
                                 
                             <div class="col-sm-6"> 
@@ -147,7 +184,7 @@
                             
                             <div class="form-group">
                             <label>Description <span class="text-danger">*</span></label>
-                            <textarea rows="4" class="form-control" id="task_description" name="leave_reason"></textarea>
+                            <textarea rows="4" class="form-control" id="task_description" name="task_description"></textarea>
                             </div>
                             
                             <div class="submit-section">
