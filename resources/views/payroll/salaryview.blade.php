@@ -1,51 +1,48 @@
-
-@extends('layouts.exportmaster')
+@extends('layouts.master')
 @section('content')
-    <!-- Page Wrapper -->
-    <div class="">
-    <div class="page-wrapper">
-        <!-- Page Content -->
-        <div class="content container-fluid" id="app">
-            <!-- Page Header -->
-            <div class="page-header">
-                <div class="row align-items-center">
-                    <div class="col" style="margin-left: -222px;">
-                        <h3 class="page-title">Payslip</h3>
-                        <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('form/salary/page') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Payslip</li>
-                        </ul>
-                    </div>
-                    <div class="col-auto float-right ml-auto">
-                        <div class="btn-group btn-group-sm">
-                            <button class="btn btn-white">CSV</button>
-                            <button class="btn btn-white"><a href=""@click.prevent="printme" target="_blank">PDF</a></button>
-                            <button class="btn btn-white"><i class="fa fa-print fa-lg"></i><a href="" @click.prevent="printme" target="_blank"> Print</a></button>
-                        </div>
-                    </div>
+<!-- Page Wrapper -->
+
+<div class="page-wrapper">
+    <!-- Page Content -->
+    <div class="content container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Payslip</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item">Dashboard</a></li>
+                        <li class="breadcrumb-item active"></li><a href="{{ route('form/salary/page') }}">Payslip</a></li>
+                    </ul>
                 </div>
-           
-            <div class="row" style="margin-left: -240px;">
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="payslip-title">Payslip for the month of {{ \Carbon\Carbon::now()->format('M') }}   {{ \Carbon\Carbon::now()->year }}  </h4>
+
+                <div class="btn-group">
+                    <button class="btn btn-white" id="convertToCSV">CSV</button>
+                    <button class="btn btn-white" id="pdfButton">PDF</button>
+                    <button class="btn btn-white" id="printButton"><i class="fa fa-print fa-lg"></i>Print</button>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="csv-data">
+                        <div class="card-body" id="printContent">
+                            <h4 class="payslip-title">Payslip for the month of {{ \Carbon\Carbon::now()->format('M') }} {{ \Carbon\Carbon::now()->year }} </h4>
                             <div class="row">
                                 <div class="col-sm-6 m-b-20">
-                                    @if(!empty($users->avatar))
-                                    <img src="{{ URL::to('/assets/images/'. $users->avatar) }}" class="inv-logo" alt="{{ $users->name }}">
-                                    @endif
                                     <ul class="list-unstyled mb-0">
-                                        <li>{{ $users->name }}</li>
-                                        <li>{{ $users->address }}</li>
-                                        <li>{{ $users->country }}</li>
+                                        <li><strong>EnTeam</strong> </li>
+                                        <li>DHA Phase 6,</li>
+                                        <li>Lahore, Pakistan</li>
                                     </ul>
                                 </div>
                                 <div class="col-sm-6 m-b-20">
                                     <div class="invoice-details">
-                                        <h3 class="text-uppercase">Payslip #49029</h3>
+                                        <h3 class="text-uppercase">Payslip <span id="randomNumber"></span></h3>
                                         <ul class="list-unstyled">
-                                            <li>Salary Month: <span>{{ \Carbon\Carbon::now()->format('M') }}  , {{ \Carbon\Carbon::now()->year }}  </span></li>
+                                            <li>Salary Month: <span>{{ \Carbon\Carbon::now()->format('M') }} , {{ \Carbon\Carbon::now()->year }} </span></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -53,10 +50,14 @@
                             <div class="row">
                                 <div class="col-lg-12 m-b-20">
                                     <ul class="list-unstyled">
-                                        <li><h5 class="mb-0"><strong>{{ $users->name }}</strong></h5></li>
-                                        <li><span>{{ $users->position }}</span></li>
-                                        <li>Employee ID: {{ $users->user_id }}</li>
-                                        <li>Joining Date: {{ $users->join_date }}</li>
+                                        @foreach($users as $user)
+                                        <li>
+                                            <h5 class="mb-0"><strong>{{ $user->name }}</strong></h5>
+                                        </li>
+                                        <li><span>{{ $user->position }}</span></li>
+                                        <li>Email: {{$user->user_email}}</li>
+                                        <li>Department: {{ $user->department }}</li>
+                                        @endforeach
                                     </ul>
                                 </div>
                             </div>
@@ -66,28 +67,34 @@
                                         <h4 class="m-b-10"><strong>Earnings</strong></h4>
                                         <table class="table table-bordered">
                                             <tbody>
+                                                @foreach($users as $user)
                                                 <?php
-                                                    $a =  (int)$users->basic;
-                                                    $b =  (int)$users->hra;
-                                                    $c =  (int)$users->conveyance;
-                                                    $e =  (int)$users->allowance;
-                                                    $Total_Earnings   = $a + $b + $c + $e;
+                                                $a =  (int)$user->basic_salary;
+                                                $b =  (int)$user->incentive_pay;
+                                                $c =  (int)$user->conveyance_allowance;
+                                                $d =  (int)$user->medical_allowance;
+                                                $e =  (int)$user->house_rent_allowance;
+                                                $Total_Earnings   = $a + $b + $c + $d + $e;
                                                 ?>
                                                 <tr>
-                                                    <td><strong>Basic Salary</strong> <span class="float-right">${{ $users->basic }}</span></td>
+                                                    <td><strong>Basic Salary</strong> <span class="float-right">${{ $user->basic_salary }}</span></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><strong>House Rent Allowance (H.R.A.)</strong> <span class="float-right">${{ $users->hra }}</span></td>
+                                                    <td><strong>House Rent Allowance</strong> <span class="float-right">${{ $user->house_rent_allowance }}</span></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><strong>Conveyance</strong> <span class="float-right">${{ $users->conveyance }}</span></td>
+                                                    <td><strong>Conveyance</strong> <span class="float-right">${{ $user->conveyance_allowance }}</span></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><strong>Other Allowance</strong> <span class="float-right">${{ $users->allowance }}</span></td>
+                                                    <td><strong>Incentive Pay</strong> <span class="float-right">${{ $user->incentive_pay }}</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Medical Allowance</strong> <span class="float-right">${{ $user->medical_allowance }}</span></td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>Total Earnings</strong> <span class="float-right"><strong>$ <?php echo $Total_Earnings ?></strong></span></td>
                                                 </tr>
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
@@ -97,43 +104,141 @@
                                         <h4 class="m-b-10"><strong>Deductions</strong></h4>
                                         <table class="table table-bordered">
                                             <tbody>
+                                                @foreach($users as $user)
                                                 <?php
-                                                    $a =  (int)$users->tds;
-                                                    $b =  (int)$users->prof_tax;
-                                                    $c =  (int)$users->esi;
-                                                    $e =  (int)$users->labour_welfare;
-                                                    $Total_Deductions   = $a + $b + $c + $e;
+                                                $a =  (int)$user->provident_fund;
+                                                $b =  (int)$user->leaves;
+                                                $c =  (int)$user->prof_tax;
+                                                $e =  (int)$user->health_insurance;
+                                                $Total_Deductions   = $a + $b + $c + $e;
                                                 ?>
                                                 <tr>
-                                                    <td><strong>Tax Deducted at Source (T.D.S.)</strong> <span class="float-right">${{ $users->tds }}</span></td>
+                                                    <td><strong>Provident Fund</strong> <span class="float-right">${{ $user->provident_fund }}</span></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><strong>Provident Fund</strong> <span class="float-right">${{ $users->prof_tax }}</span></td>
+                                                    <td><strong>Leaves</strong> <span class="float-right">${{ $user->leaves }}</span></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><strong>ESI</strong> <span class="float-right">${{ $users->esi }}</span></td>
+                                                    <td><strong>Prof. Tax</strong> <span class="float-right">${{ $user->prof_tax }}</span></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><strong>Loan</strong> <span class="float-right">${{ $users->labour_welfare }}</span></td>
+                                                    <td><strong>Health Insurance</strong> <span class="float-right">${{ $user->health_insurance }}</span></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><strong>Total Deductions</strong> <span class="float-right"><strong>$<?php echo $Total_Deductions;?></strong></span></td>
+                                                    <td><strong>Total Deductions</strong> <span class="float-right"><strong>$<?php echo $Total_Deductions; ?></strong></span></td>
                                                 </tr>
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
-                                <div class="col-sm-12" >
-                                    <p><strong>Net Salary: ${{ $users->salary }}</strong> (Fifty nine thousand six hundred and ninety eight only.)</p>
+                                <div class="col-sm-12">
+                                    @foreach($users as $user)
+                                    <?php
+                                    $total = $Total_Earnings - $Total_Deductions;
+                                    ?>
+                                    <p><strong>Net Salary: <?php echo $total; ?></strong></p>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
+                        <!-- /Page Content -->
                     </div>
                 </div>
+                <!-- /Page Wrapper -->
             </div>
         </div>
-        <!-- /Page Content -->
     </div>
-    <!-- /Page Wrapper -->
-    </div>
+</div>
+@section('script')
+
+<script>
+    $(document).ready(function() {
+        var randomNum = Math.floor(Math.random() * 200) + 100;
+        $("#randomNumber").text("#" + randomNum)
+    });
+</script>
+<script>
+    document.getElementById('convertToCSV').addEventListener('click', function() {
+        const csvData = document.querySelector('.csv-data').textContent.trim(); // Get the HTML content of the CSV data
+        const rows = csvData.split('\n'); // Split the CSV data into rows
+        const csvContent = []; // Create an array to hold the CSV content
+        rows.forEach(row => { // Loop through each row
+            const columns = row.split(','); // Split the row into columns
+            csvContent.push(columns.join(',')); // Push the columns into the csvContent array
+        });
+        const formattedCSV = csvContent.join('\n'); // Join the rows with newline characters
+        const blob = new Blob([formattedCSV], {
+            type: 'text/csv'
+        }); // Create a Blob from the formatted CSV data
+        const link = document.createElement('a'); // Create a download link
+        link.href = URL.createObjectURL(blob);
+        link.download = 'data.csv';
+        link.click(); // Trigger the download
+        URL.revokeObjectURL(link.href); // Clean up
+    });
+</script>
+<script>
+    document.getElementById('printButton').addEventListener('click', function() {
+        const printContent = document.getElementById('printContent').innerHTML;
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write('<html><head><title>Print</title></head><body>');
+        printWindow.document.write(printContent);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.onload = function() {
+            printWindow.print();
+        };
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+    document.getElementById('pdfButton').addEventListener('click', generatePDF);
+
+    function generatePDF() {
+        const element = document.getElementById('printContent').innerHTML; // Change this selector to target your specific content
+        //console.log(element);
+        const opt = {
+            margin: 10,
+            filename: 'output.pdf',
+            image: {
+                type: 'jpeg',
+                quality: 0.98
+            },
+            html2canvas: {
+                scale: 2
+            },
+            jsPDF: {
+                unit: 'mm',
+                format: 'a4',
+                orientation: 'portrait'
+            }
+        };
+
+        html2pdf().from(element).set(opt).toPdf().outputPdf().then(pdf => {
+            const blob = new Blob([pdf], {
+                type: 'application/pdf'
+            });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'output.pdf';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        });
+    }
+</script>
+
+
+
+
+
+
+
+
+
+@endsection
+
 @endsection

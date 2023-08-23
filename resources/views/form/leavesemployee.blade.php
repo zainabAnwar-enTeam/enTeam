@@ -31,19 +31,23 @@
             <div class="col-md-3">
                 <div class="stats-info">
                     <h6>Medical Leave</h6>
-                    <h4>3</h4>
+                    <h4>{{$medicalLeaves}}</h4>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="stats-info">
                     <h6>Other Leave</h6>
-                    <h4>4</h4>
+                    <?php 
+                        $otherLeaves = $lossOfPay + $casualLeaves;
+                        $remainingLeaves = 12 - $medicalLeaves - $otherLeaves;
+                    ?>
+                    <h4>{{$otherLeaves}}</h4>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="stats-info">
                     <h6>Remaining Leave</h6>
-                    <h4>5</h4>
+                    <h4>{{$remainingLeaves}}</h4>
                 </div>
             </div>
         </div>
@@ -80,10 +84,10 @@
                                 <td class="text-center">
                                     <div class="dropdown action-label">
                                         <?php
-                                        if ($items->leave_status == 'Declined') {
+                                        if ($items->leave_status == 'Incomplete') {
                                             $design = "fa fa-dot-circle-o text-danger";
                                         }
-                                        else if ($items->leave_status == 'Approved') {
+                                        else if ($items->leave_status == 'Complete') {
                                             $design = "fa fa-dot-circle-o text-success";
                                         }
                                         else

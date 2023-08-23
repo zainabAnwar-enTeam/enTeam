@@ -18,6 +18,7 @@ class HolidayController extends Controller
     // save record
     public function saveRecord(Request $request)
     {
+       // dd($request->all());
         $request->validate([
             'nameHoliday' => 'required|string|max:255',
             'holidayDate' => 'required|string|max:255',

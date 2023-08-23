@@ -7,6 +7,8 @@ $a = Auth::user();
 @extends('layouts.master')
 @section('content')
    
+{{-- message --}}
+{!! Toastr::message() !!}
     <!-- Page Wrapper -->
     <div class="page-wrapper">
         <!-- Page Content -->
@@ -26,44 +28,42 @@ $a = Auth::user();
             <!-- /Page Header -->
 
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="card punch-status">
                         <div class="card-body">
-                            <h5 class="card-title">Timesheet <small class="text-muted" id="currentDate"  >    </small></h5>
+                            <h5 class="card-title">Timesheet <small class="text-muted"   >  {{$date}}  </small></h5>
                             <div class="punch-det">
                                 <h5>Punch In at</h5>
-                                    <div  class="text-muted" id="currentDay"  ></div>
-                                    <div  class="text-muted" id="currentDay"  ></div>
+                                    <div  class="text-muted"  >{{$day}}</div>
+                                    
                             </div>
-                            <div class="punch-info">
-                                <div class="punch-hours">
-                                    <span>3.45 hrs</span>
+                            
+                            <div class="punch-hours" id="clock"> </div>
+                            
+                            <div class="d-flex justify-content-around">
+                                <div  class="punch-btn-section">
+                                    <form action="{{ route('attendance123') }}" method="POST" >
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary punch-btn">Punch In</button>
+                                    </form>
+                                </div>
+                             
+                                <div class="punch-btn-section">
+                                    <form action="{{ route('attendance1234') }}" method="POST">
+                                    @csrf
+                                        <button type="submit" class="btn btn-primary punch-btn">Punch Out</button>
+                                    </form>
                                 </div>
                             </div>
-                            <div class="punch-btn-section">
-                            <form action="{{ route('attendance123') }}" method="POST">
-                            @csrf
-                                 <button type="submit" class="btn btn-primary punch-btn" id="getTimeButton" >Punch In</button>
-                            </form>
-                            </div>
-                            <div class="punch-btn-section">
-                                <form action="{{ route('attendance1234') }}" method="POST">
-                              @csrf
-                                 <button type="submit" class="btn btn-primary punch-btn">Punch Out</button>
-                                </form>
-                            </div>
+                            
                             <div class="statistics">
                                 <div class="row">
-                                    <div class="col-md-6 col-6 text-center">
-                                        <div class="stats-box">
-                                            <p>Break</p>
-                                            <h6>1.21 hrs</h6>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-6 text-center">
-                                        <div class="stats-box">
-                                            <p>Overtime</p>
-                                            <h6>3 hrs</h6>
+                                    <div class="col-md-12 col-12 text-center">
+                                        <div class="stats-box"> 
+                                            <p>Today Spend Hours</p>
+                                            @foreach($timediffer as $employee)
+                                            <h6>{{$employee->total_hours}} </h6>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -71,14 +71,18 @@ $a = Auth::user();
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                
+                <div class="col-md-6">
                     <div class="card att-statistics">
                         <div class="card-body">
                             <h5 class="card-title">Statistics</h5>
                             <div class="stats-list">
                                 <div class="stats-info">
-                                    <p>Today <strong>3.45 <small>/ 8 hrs</small></strong></p>
+                                    <p>Today <strong>@foreach($timediffer as $employee)
+                                            {{$employee->total_hours}} 
+                                            @endforeach <small>/ 8 hrs</small></strong></p>
                                     <div class="progress">
+                                        
                                         <div class="progress-bar bg-primary" role="progressbar" style="width: 31%" aria-valuenow="31" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
@@ -109,32 +113,8 @@ $a = Auth::user();
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card recent-activity">
-                        <div class="card-body">
-                            <h5 class="card-title">Today Activity</h5>
-                            <ul class="res-activity-list">
-                                <li>
-                                    <p class="mb-0">Punch In at</p>
-                                    <p class="res-activity-time" id="currentTime">
-                                        <i class="fa fa-clock-o"></i>
-                                        
-                                    </p>
-                                </li>
-                                <li>
-                                    <p class="mb-0">Punch Out at</p>
-                                    <p class="res-activity-time">
-                                        <i class="fa fa-clock-o"></i>
-                                        11.00 AM.
-                                    </p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                </div>    
             </div>
-
             <!-- Search Filter -->
             <div class="row filter-row">
                 <div class="col-sm-3">  
@@ -190,27 +170,23 @@ $a = Auth::user();
                         <table class="table table-striped custom-table datatable">
                             <thead>
                                 <tr>
-                                    <th>No</th>
-                                    <th>Date </th>
+                                    <th>Date</th>
+                                    <th>Name </th>
                                     <th>Punch In</th>
                                     <th>Punch Out</th>
-                                    <th>Production</th>
-                                    <th>Break</th>
-                                    <th>Overtime</th>
+                                    <th>Today Spending Time</th>
                                 </tr>
                             </thead>
                             <tbody>
-                               
+                               @foreach($attendance as $employee)
                                 <tr>
-                                  <td> {{$a->user_id }}</td>
-                                  <td> {{$a->name}} </td>
-                                 <td> {{$a->email}} </td>
-                                    
-                                    
+                                <td>{{$employee->date}}</td>
+                                <td>{{$employee->name}}</td>
+                                <td> {{$employee->punch_in}} </td>
+                                <td> {{$employee->punch_out}} </td>
+                                 <td> {{$employee->total_hours}} </td>
                                 </tr>
-                             
-                              
-                                
+                             @endforeach                               
                             </tbody>
                         </table>
                     </div>
@@ -243,5 +219,25 @@ document.getElementById("getTimeButton").addEventListener("click", function() {
   document.getElementById("currentTime").textContent = "Current Time: " + currentTimeString;
 });
 </script>
+<script>function updateClock() {
+    var now = new Date();
+    var hours = now.getHours();
+    var minutes = now.getMinutes();
+    var seconds = now.getSeconds();
+
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12;
+    // Format the time with leading zeros
+    var formattedTime = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} ${ampm}`;
+
+    // Update the clock's content
+    document.getElementById('clock').textContent = formattedTime;
+}
+
+// Initial call to update the clock
+updateClock();
+
+// Update the clock every second
+setInterval(updateClock, 1000);</script>
     @endsection
 @endsection

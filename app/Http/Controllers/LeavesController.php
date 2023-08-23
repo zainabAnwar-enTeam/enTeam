@@ -8,43 +8,44 @@ use App\Models\LeavesAdmin;
 use Illuminate\Support\Facades\DB;
 use DateTime;
 use Auth;
+
 class LeavesController extends Controller
 {
     //
     public function leaves()
     {
         $leaves = DB::table('leaves_admins')
-                    ->join('users', 'users.user_id', '=', 'leaves_admins.user_id')
-                    ->select('leaves_admins.*', 'users.position','users.name','users.avatar')
-                    ->get();
+            ->join('users', 'users.user_id', '=', 'leaves_admins.user_id')
+            ->select('leaves_admins.*', 'users.position', 'users.name', 'users.avatar')
+            ->get();
+
 
         $totalLeaves = DB::table('leaves_admins')->count();
-        $pendingLeaves = DB::table('leaves_admins')->where('leave_status','pending')->count();
-        $approvedLeaves = DB::table('leaves_admins')->where('leave_status','Approved')->count();
-        $declinedLeaves = DB::table('leaves_admins')->where('leave_status','Declined')->count();
+        $pendingLeaves = DB::table('leaves_admins')->where('leave_status', 'pending')->count();
+        $approvedLeaves = DB::table('leaves_admins')->where('leave_status', 'Approved')->count();
+        $declinedLeaves = DB::table('leaves_admins')->where('leave_status', 'Declined')->count();
 
-        return view('form.leaves',compact('leaves','totalLeaves','pendingLeaves','approvedLeaves','declinedLeaves'));
+        return view('form.leaves', compact('leaves', 'totalLeaves', 'pendingLeaves', 'approvedLeaves', 'declinedLeaves'));
     }
 
 
-      //update Status From Admin of Leave
-      public function editstatus(Request $request)
-      {
-          DB::beginTransaction();
-          try {
-             
-              LeavesAdmin::where('id', $request->id)->update(['leave_status' => $request->status]);
-              DB::commit();
-              Toastr::success('Status Updated successfully :)','Success');
-              return redirect()->back();
-          }
-          catch(\Exception $e) {
-              DB::rollback();
-              Toastr::error('Update Status fail :)','Error');
-              return redirect()->back();
-          }
-         
-      }
+    //update Status From Admin of Leave
+    public function editstatus(Request $request)
+    {
+
+        DB::beginTransaction();
+        try {
+
+            LeavesAdmin::where('id', $request->id)->update(['leave_status' => $request->status]);
+            DB::commit();
+            Toastr::success('Status Updated successfully :)', 'Success');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            DB::rollback();
+            Toastr::error('Update Status fail :)', 'Error');
+            return redirect()->back();
+        }
+    }
     // save record
     public function saveRecord(Request $request)
     {
@@ -71,13 +72,13 @@ class LeavesController extends Controller
             $leaves->day           = $days;
             $leaves->leave_reason  = $request->leave_reason;
             $leaves->save();
-            
+
             DB::commit();
-            Toastr::success('Create new Leaves successfully :)','Success');
+            Toastr::success('Create new Leaves successfully :)', 'Success');
             return redirect()->back();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
-            Toastr::error('Add Leaves fail :)','Error');
+            Toastr::error('Add Leaves fail :)', 'Error');
             return redirect()->back();
         }
     }
@@ -102,13 +103,13 @@ class LeavesController extends Controller
                 'leave_reason' => $request->leave_reason,
             ];
 
-            LeavesAdmin::where('id',$request->id)->update($update);
+            LeavesAdmin::where('id', $request->id)->update($update);
             DB::commit();
-            Toastr::success('Updated Leaves successfully :)','Success');
+            Toastr::success('Updated Leaves successfully :)', 'Success');
             return redirect()->back();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
-            Toastr::error('Update Leaves fail :)','Error');
+            Toastr::error('Update Leaves fail :)', 'Error');
             return redirect()->back();
         }
     }
@@ -119,13 +120,12 @@ class LeavesController extends Controller
         try {
 
             LeavesAdmin::destroy($request->id);
-            Toastr::success('Leaves admin deleted successfully :)','Success');
+            Toastr::success('Leaves admin deleted successfully :)', 'Success');
             return redirect()->back();
-        
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
 
             DB::rollback();
-            Toastr::error('Leaves admin delete fail :)','Error');
+            Toastr::error('Leaves admin delete fail :)', 'Error');
             return redirect()->back();
         }
     }
@@ -143,25 +143,35 @@ class LeavesController extends Controller
     }
 
     // attendance employee
-    public function AttendanceEmployee()
-    {
-        return view('form.attendanceemployee');
-    }
-
     // leaves Employee
     public function leavesEmployee()
     {
-        $loggedInUserId = Auth::id();        
+        $loggedInUserId = Auth::id();
         $leaves = DB::table('leaves_admins')
-        ->join('users', 'users.user_id', '=', 'leaves_admins.user_id')
-        ->where('users.role_name', 'employee') // Filter for "employee" user_role
-        ->where('users.id', $loggedInUserId) // Filter for the logged-in user
-        ->select('leaves_admins.*', 'users.position', 'users.name', 'users.avatar')
-        ->get();
-        
-      //  $medical = $leaves::where('leave_type','Medical Leave')->count();
+            ->join('users', 'users.user_id', '=', 'leaves_admins.user_id')
+            ->where('users.role_name', 'employee') // Filter for "employee" user_role
+            ->where('users.id', $loggedInUserId) // Filter for the logged-in user
+            ->select('leaves_admins.*', 'users.position', 'users.name', 'users.avatar')
+            ->get();
+        $medicalLeaves = DB::table('leaves_admins')
+            ->join('users', 'users.user_id', '=', 'leaves_admins.user_id')
+            ->where('users.role_name', 'employee') // Filter for "employee" user_role
+            ->where('users.id', $loggedInUserId) // Filter for the logged-in user
+            ->where('leaves_admins.leave_type', 'Medical Leave')->where('leaves_admins.leave_status', 'Approved')->count();
+        $lossOfPay = DB::table('leaves_admins')
+            ->join('users', 'users.user_id', '=', 'leaves_admins.user_id')
+            ->where('users.role_name', 'employee') // Filter for "employee" user_role
+            ->where('users.id', $loggedInUserId) // Filter for the logged-in user
+            ->where('leaves_admins.leave_type', 'Loss of Pay')->where('leaves_admins.leave_status', 'Approved')->count();
+        $casualLeaves = DB::table('leaves_admins')
+            ->join('users', 'users.user_id', '=', 'leaves_admins.user_id')
+            ->where('users.role_name', 'employee') // Filter for "employee" user_role
+            ->where('users.id', $loggedInUserId) // Filter for the logged-in user
+            ->where('leaves_admins.leave_type', 'Casual Leave 12 Days')->where('leaves_admins.leave_status', 'Approved')
+            ->count();
+            $total = ($medicalLeaves + $lossOfPay + $casualLeaves) - 12; 
 
-        return view('form.leavesemployee',compact('leaves'));
+        return view('form.leavesemployee', compact('leaves', 'medicalLeaves', 'lossOfPay', 'casualLeaves'));
     }
 
     // shiftscheduling

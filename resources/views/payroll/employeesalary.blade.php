@@ -12,115 +12,51 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Employee Salary <span id="year"></span></h3>
+                        <h3 class="page-title"> Employee Salary <span id="year"></span></h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Salary</li>
                         </ul>
                     </div>
-                    <div class="col-auto float-right ml-auto">
-                        <a href="#" class="btn add-btn" data-toggle="modal" data-target="#add_salary"><i class="fa fa-plus"></i> Add Salary</a>
-                    </div>
+                   
                 </div>
             </div>
 
-            <!-- Search Filter -->
-            <div class="row filter-row">
-                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
-                    <div class="form-group form-focus">
-                        <input type="text" class="form-control floating">
-                        <label class="focus-label">Employee Name</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
-                    <div class="form-group form-focus select-focus">
-                        <select class="select floating"> 
-                            <option value=""> -- Select -- </option>
-                            <option value="">Employee</option>
-                            <option value="1">Manager</option>
-                        </select>
-                        <label class="focus-label">Role</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12"> 
-                    <div class="form-group form-focus select-focus">
-                        <select class="select floating"> 
-                            <option> -- Select -- </option>
-                            <option> Pending </option>
-                            <option> Approved </option>
-                            <option> Rejected </option>
-                        </select>
-                        <label class="focus-label">Leave Status</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
-                    <div class="form-group form-focus">
-                        <div class="cal-icon">
-                            <input class="form-control floating datetimepicker" type="text">
-                        </div>
-                        <label class="focus-label">From</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
-                    <div class="form-group form-focus">
-                        <div class="cal-icon">
-                            <input class="form-control floating datetimepicker" type="text">
-                        </div>
-                        <label class="focus-label">To</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
-                    <a href="#" class="btn btn-success btn-block"> Search </a>  
-                </div>     
-            </div>
-            <!-- /Search Filter -->  
+            
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-responsive">
-                        <table class="table table-striped custom-table datatable">
+                        <table class="table table-striped custom-table ">
                             <thead>
                                 <tr>
                                     <th>Employee</th>
-                                    <th>Employee ID</th>
                                     <th>Email</th>
-                                    <th>Join Date</th>
-                                    <th>Role</th>
+                                    <th>Department</th>
+                                    <th>Basic Salary</th>
+                                    <th>Total Earning</th>
+                                    <th>Deduction</th>
                                     <th>Salary</th>
                                     <th>Payslip</th>
                                     <th class="text-right">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($users as $items)
-                                <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="{{ url('employee/profile/'.$items->user_id) }}" class="avatar"><img alt="" src="{{ URL::to('/assets/images/'. $items->avatar) }}"></a>
-                                            <a href="{{ url('employee/profile/'.$items->user_id) }}">{{ $items->name }}<span>{{ $items->position }}</span></a>
-                                        </h2>
-                                    </td>
-                                    <td>{{ $items->user_id }}</td>
-                                    <td hidden class="id">{{ $items->id }}</td>
-                                    <td hidden class="name">{{ $items->name }}</td>
-                                    <td hidden class="basic">{{ $items->basic }}</td>
-                                    <td hidden class="da">{{ $items->da }}</td>
-                                    <td hidden class="hra">{{ $items->hra }}</td>
-                                    <td hidden class="conveyance">{{ $items->conveyance }}</td>
-                                    <td hidden class="allowance">{{ $items->allowance }}</td>
-                                    <td hidden class="medical_allowance">{{ $items->medical_allowance }}</td>
-                                    <td hidden class="tds">{{ $items->tds }}</td>
-                                    <td hidden class="esi">{{ $items->esi }}</td>
-                                    <td hidden class="pf">{{ $items->pf }}</td>
-                                    <td hidden class="leave">{{ $items->leave }}</td>
-                                    <td hidden class="prof_tax">{{ $items->prof_tax }}</td>
-                                    <td hidden class="labour_welfare">{{ $items->labour_welfare }}</td>
-                                    <td>{{ $items->email }}</td>
-                                    <td>{{ $items->join_date }}</td>
-                                    <td>{{ $items->role_name }}</td>
-                                    <td>${{ $items->salary }}</td>
-                                    <td hidden class="salary">{{ $items->salary }}</td>
-                                    <td><a class="btn btn-sm btn-primary" href="{{ url('form/salary/view/'.$items->user_id) }}" target="_blank">Generate Slip</a></td>
-                                    <td class="text-right">
+                               @foreach($users as $salary)
+                               <tr>
+                                <td>{{$salary->name}}</td>
+                                <td>{{$salary->user_email}}</td>
+                                <td>{{$salary->department}}</td>
+                                <td>{{$salary->basic_salary}}</td>
+                                <?php
+                                    $earning = $salary->basic_salary + $salary->incentive_pay + $salary->conveyance_allowance + $salary->house_rent_allowance + $salary->medical_allowance;
+                                    $deduction = $salary->provident_fund + $salary->leaves + $salary->prof_tax + $salary->health_insurance;
+                                    $total = $earning - $deduction;
+                                ?>
+                                <td>{{$earning}}</td>
+                                <td>{{$deduction}}</td>
+                                <td>{{$total}}</td>
+                                <td><a class="btn btn-sm btn-primary" href="{{ url('form/salary/view/'.$salary->user_id) }}" target="_blank">Generate Slip</a></td>
+                                <td class="text-right">
                                         <div class="dropdown dropdown-action">
                                             <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
@@ -129,8 +65,8 @@
                                             </div>
                                         </div>
                                     </td>
-                                </tr>
-                                @endforeach
+                               </tr>
+                               @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -157,10 +93,10 @@
                                 <div class="col-sm-6"> 
                                     <div class="form-group">
                                         <label>Select Staff</label>
-                                        <select class="select floating" >
+                                        <select class="select floating" style="width: 100%;" tabindex="-1" aria-hidden="true" id="name" name="name" >
                                             <option value="">-- Select --</option>
                                             @foreach ($userList as $key=>$user )
-                                                <option value="{{ $user->name }}" data-employee_id={{ $user->user_id }}>{{ $user->name }}</option>
+                                                <option value="{{ $user->name }}" data-user_email="{{ $user->email }}"data-user_id="{{$user->user_id}}"data-department="{{$user->department}}">{{ $user->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -170,10 +106,19 @@
                                         </span>
                                     @enderror
                                 </div>
-                                <input class="form-control" type="hidden" name="user_id" id="employee_id" readonly>
+                                
                                 <div class="col-sm-6">
-                                    <label>Email</label>
-                                    <input type="text" class="form-control" id="email" name="email" placeholder="Auto Email" readonly>
+                                    <label class="col-form-label">Email</label>
+                                    <input class="form-control" type= "email" id="user_email" name="user_email" placeholder="Auto Email" readonly>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-form-label">ID</label>
+                                    <input class="form-control" type= "text" id="user_id" name="user_id" placeholder="Auto Id" readonly>
+                                    
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-form-label">Department</label>
+                                    <input class="form-control" type= "text" id="department" name="department" placeholder="Auto Department" readonly>
                                     
                                 </div>
                             </div>
@@ -182,7 +127,7 @@
                                     <h4 class="text-primary">Earnings</h4>
                                     <div class="form-group">
                                         <label>Basic</label>
-                                        <input class="form-control @error('basic') is-invalid @enderror" type="number" name="basic" id="basic" value="{{ old('basic') }}" placeholder="Enter basic">
+                                        <input class="form-control @error('basic') is-invalid @enderror" type="number" name="basic_salary" id="basic_salary" value="{{ old('basic') }}" placeholder="Enter basic salary">
                                         @error('basic')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -191,7 +136,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Incentive Pay</label>
-                                        <input class="form-control @error('da') is-invalid @enderror" type="number"  name="da" id="da" value="{{ old('da') }}" placeholder="Enter Incentive Pay">
+                                        <input class="form-control @error('da') is-invalid @enderror" type="number"  name="incentive_pay" id="incentive_pay" value="{{ old('da') }}" placeholder="Enter Incentive Pay">
                                         @error('da')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -200,7 +145,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Conveyance  Allowance</label>
-                                        <input class="form-control @error('medical_allowance') is-invalid @enderror" type="number" name="medical_allowance" id="medical_allowance" value="{{ old('Conveyance_allowance') }}" placeholder="Enter Conveyance Allowance">
+                                        <input class="form-control @error('medical_allowance') is-invalid @enderror" type="number" name="conveyance_allowance" id="conveyance_allowance" value="{{ old('Conveyance_allowance') }}" placeholder="Enter Conveyance Allowance">
                                         @error('medical_allowance')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -209,7 +154,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>House Rent Allowance</label>
-                                        <input class="form-control @error('hra') is-invalid @enderror" type="number"  name="hra" id="hra" value="{{ old('hra') }}" placeholder="Enter House Rent Allowance">
+                                        <input class="form-control @error('hra') is-invalid @enderror" type="number"  name="house_rent_allowance" id="house_rent_allowance" value="{{ old('hra') }}" placeholder="Enter House Rent Allowance">
                                         @error('hra')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -225,21 +170,13 @@
                                             </span>
                                         @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label>PHD Allowance</label>
-                                        <input class="form-control @error('medical_allowance') is-invalid @enderror" type="number" name="PHD_allowance" id="PHD_allowance" value="{{ old('PHD_allowance') }}" placeholder="Enter PHD Allowance" required>
-                                        @error('PHD_allowance')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
                                 </div>
+                                
                                 <div class="col-sm-6">  
                                     <h4 class="text-primary">Deductions</h4>
                                     <div class="form-group">
                                         <label>Provident Fund</label>
-                                        <input class="form-control @error('tds') is-invalid @enderror" type="number" name="tds" id="tds" value="{{ old('tds') }}" placeholder="Enter Provident Fund">
+                                        <input class="form-control @error('tds') is-invalid @enderror" type="number" name="provident_fund" id="provident_fund" value="{{ old('tds') }}" placeholder="Enter Provident Fund">
                                         @error('tds')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -248,7 +185,7 @@
                                     </div> 
                                     <div class="form-group">
                                         <label>Leaves</label>
-                                        <input class="form-control @error('esi') is-invalid @enderror" type="number" name="esi" id="esi" value="{{ old('esi') }}" placeholder="Enter Leaves">
+                                        <input class="form-control @error('esi') is-invalid @enderror" type="number" name="leaves" id="leaves" value="{{ old('esi') }}" placeholder="Enter Leaves">
                                         @error('esi')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -257,7 +194,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Prof. Tax</label>
-                                        <input class="form-control @error('pf') is-invalid @enderror" type="number" name="pf" id="pf" value="{{ old('pf') }}" placeholder="Enter Prof. Tax">
+                                        <input class="form-control @error('pf') is-invalid @enderror" type="number" name="prof_tax" id="prof_tax" value="{{ old('pf') }}" placeholder="Enter Prof. Tax">
                                         @error('pf')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -265,26 +202,8 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label>Loan</label>
-                                        <input class="form-control @error('leave') is-invalid @enderror" type="text" name="loan" id="loan" value="{{ old('loan') }}" placeholder="Enter Loan">
-                                        @error('Loan')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Group Insurance</label>
-                                        <input class="form-control @error('leave') is-invalid @enderror" type="text" name="loan" id="loan" value="{{ old('loan') }}" placeholder="Enter Group Insurance">
-                                        @error('Loan')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Income Tax</label>
-                                        <input class="form-control @error('leave') is-invalid @enderror" type="text" name="loan" id="loan" value="{{ old('loan') }}" placeholder="Enter Income Tax">
+                                        <label>Health Insurance</label>
+                                        <input class="form-control @error('leave') is-invalid @enderror" type="text" name="health_insurance" id="health_insurance" value="{{ old('loan') }}" placeholder="Enter Group Insurance">
                                         @error('Loan')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -441,11 +360,12 @@
             });
         </script>
         <script>
-            // select auto id and email
+            // select auto id and email and department
             $('#name').on('change',function()
             {
-                $('#employee_id').val($(this).find(':selected').data('employee_id'));
-                $('#email').val($(this).find(':selected').data('email'));
+                $('#user_id').val($(this).find(':selected').data('user_id'));
+                $('#user_email').val($(this).find(':selected').data('user_email'));
+                $('#department').val($(this).find(':selected').data('department'));
             });
         </script>
         {{-- update js --}}

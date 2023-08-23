@@ -27,6 +27,7 @@ use App\Http\Controllers\TrainingTypeController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\PersonalInformationController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\FeedbackController;
 
 /*
 |--------------------------------------------------------------------------
@@ -136,11 +137,6 @@ Route::controller(UserManagementController::class)->group(function () {
     Route::get('activity/login/logout', 'activityLogInLogOut')->middleware('auth')->name('activity/login/logout');    
 });
 
-// ----------------------------- search user management ------------------------------//
-Route::controller(UserManagementController::class)->group(function () {
-    Route::post('search/user/list', 'searchUser')->name('search/user/list');
-});
-
 // ----------------------------- form change password ------------------------------//
 Route::controller(UserManagementController::class)->group(function () {
     Route::get('change/password', 'changePasswordView')->middleware('auth')->name('change/password');
@@ -207,6 +203,7 @@ Route::controller(EmployeeController::class)->group(function () {
     Route::post('all/employee/update', 'updateRecord')->middleware('auth')->name('all/employee/update');
     Route::get('all/employee/delete/{employee_id}', 'deleteRecord')->middleware('auth');
     Route::post('all/employee/search', 'employeeSearch')->name('all/employee/search');
+    //Route::post('search/user/list', 'searchUser')->name('search/user/list');
     Route::post('all/employee/list/search', 'employeeListSearch')->name('all/employee/list/search');
 
     Route::get('form/departments/page', 'index')->middleware('auth')->name('form/departments/page');    
@@ -247,14 +244,14 @@ Route::controller(LeavesController::class)->group(function () {
     Route::post('form/leaves/edit', 'editRecordLeave')->middleware('auth')->name('form/leaves/edit');
     Route::post('form/leaves/edit/delete','deleteLeave')->middleware('auth')->name('form/leaves/edit/delete');    
     Route::post('form/leaves/edit/editstatus','editstatus')->middleware('auth')->name('form/leaves/edit/editstatus'); 
-   // Route::get('fo')
+   
 });
 
 // ----------------------------- form attendance  ------------------------------//
 Route::controller(LeavesController::class)->group(function () {
     Route::get('form/leavesettings/page', 'leaveSettings')->middleware('auth')->name('form/leavesettings/page');
-    Route::get('attendance/page', 'AttendanceEmployee')->middleware('auth')->name('attendance/page');
-    Route::get('attendance/employee/page', 'AttendanceEmployee')->middleware('auth')->name('attendance/employee/page');
+    
+    
     Route::get('form/shiftscheduling/page', 'shiftScheduLing')->middleware('auth')->name('form/shiftscheduling/page');
     Route::get('form/shiftlist/page', 'shiftList')->middleware('auth')->name('form/shiftlist/page'); 
 
@@ -263,9 +260,14 @@ Route::controller(LeavesController::class)->group(function () {
 
 //------------------------------- Attendance Punch_in and Punch-out--------------//
 Route::controller(AttendanceController::class)->group(function(){
-    Route::post('attendance/employee/page','index')->middleware('auth')->name('attendance/employee/page');
+    Route::get('attendance/page','index')->middleware('auth')->name('attendance/page');
     Route::post('attendance/punch-in','punchIn')->middleware('auth')->name('attendance123');
     Route::post('attendance/punch-out','punchOut')->middleware('auth')->name('attendance1234'); 
+    
+   // Route::get('attendance/employee/page', 'Overtime')->middleware('auth')->name('attendance/employee/page');
+   // Route::get('attendance/employee/page', 'AttendanceEmployee')->middleware('auth')->name('attendance/employee/page');
+    Route::get('attendance/page', 'AttendanceEmployee')->middleware('auth')->name('attendance/page');
+   // Route::get('attendance/page', 'Overtime')->middleware('auth')->name('attendance/page');
 });
 
 //------------------------------- All Attendance/////////--------------//
@@ -282,7 +284,12 @@ Route::controller(PayrollController::class)->group(function () {
     Route::post('form/salary/delete', 'deleteRecord')->middleware('auth')->name('form/salary/delete');
     Route::get('form/salary/view/{user_id}', 'salaryView')->middleware('auth');
     Route::get('form/payroll/items', 'payrollItems')->middleware('auth')->name('form/payroll/items');    
+    Route::post('form/salary/page', 'searchRecord')->name('form/salary/page');
+    Route::get('salary/page','salary')->middleware('auth')->name('salary/page');
+   // Route::get('form/salaryview','generatePDF')->middleware('auth')->name('form/salaryview');
+   
 });
+
 
 // ----------------------------- reports  ------------------------------//
 Route::controller(ExpenseReportsController::class)->group(function () {
@@ -290,6 +297,7 @@ Route::controller(ExpenseReportsController::class)->group(function () {
     Route::get('form/invoice/reports/page', 'invoiceReports')->middleware('auth')->name('form/invoice/reports/page');
     Route::get('form/daily/reports/page', 'dailyReport')->middleware('auth')->name('form/daily/reports/page');
     Route::get('form/leave/reports/page','leaveReport')->middleware('auth')->name('form/leave/reports/page');
+    
 });
 
 // ----------------------------- performance  ------------------------------//
@@ -364,5 +372,13 @@ Route::controller(PersonalInformationController::class)->group(function () {
 Route::controller(TaskController::class)->group(function(){
     Route::get('task','index')->middleware('auth')->name('task');
     Route::post('task/save','saveRecord')->middleware('auth')->name('task/save');
+    Route::post('taskemployee/status','editstatus')->middleware('auth')->name('taskemployee/status'); 
+   
  });
 
+//------------------------------Feedback--------------------//
+Route::controller(FeedbackController::class)->group(function(){
+    Route::get('form/feedback/page','index')->middleware('auth')->name('form/feedback/page'); 
+    Route::post('form/feedback/admin','rateemployee')->middleware('auth')->name('form/feedback/admin'); 
+
+});
